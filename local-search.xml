@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>conda学习记录</title>
+    <link href="/2026/09/30/%E6%97%A5%E8%AE%B0/"/>
+    <url>/2026/09/30/%E6%97%A5%E8%AE%B0/</url>
+    
+    <content type="html"><![CDATA[<h1 id="Conda学习日记"><a href="#Conda学习日记" class="headerlink" title="Conda学习日记"></a>Conda学习日记</h1><h2 id="一、Conda是什么"><a href="#一、Conda是什么" class="headerlink" title="一、Conda是什么"></a>一、Conda是什么</h2><p>Conda是一款跨平台的<strong>包管理工具+虚拟环境管理器</strong>，常随Miniconda&#x2F;Anaconda一起安装。<br>它可以创建多个相互隔离的Python虚拟环境，不同环境可以安装不同版本的Python和第三方库，解决项目之间包版本冲突的问题。<br>conda不仅可以安装Python包，还能管理底层C&#x2F;C++依赖，这是和pip最大的区别。pip仅能管理Python包，无法管理Python解释器本身。</p><h2 id="二、基础常用命令"><a href="#二、基础常用命令" class="headerlink" title="二、基础常用命令"></a>二、基础常用命令</h2><pre><code class="language-bash">conda -V                          # 查看conda版本conda create -n myenv python=3.10 # 创建名为myenv、python3.10的虚拟环境conda env list                    # 列出本机所有虚拟环境conda activate myenv              # 激活进入myenv环境conda deactivate                  # 退出当前虚拟环境conda install numpy               # 在激活的环境中安装软件包conda remove -n myenv --all       # 删除整个虚拟环境学习小结：在研究生科研代码开发中，不同项目对 Python 版本、深度学习库版本要求不一样。使用 conda 可以独立维护每个项目的运行环境，避免版本冲突，方便复现代码。# conda cheat sheet 英译汉## 环境管理 Environment Management- `conda create -n envname python=3.9`：创建名为 envname、Python3.9 的虚拟环境- `conda activate envname`：激活环境 envname- `conda deactivate`：退出当前环境- `conda env list`：列出所有虚拟环境- `conda remove -n envname --all`：删除 envname 整个环境## 包管理 Package Management- `conda search packagename`：搜索可用的软件包- `conda install packagename`：安装包- `conda list`：列出当前环境已安装的包- `conda update packagename`：更新指定包- `conda remove packagename`：卸载包## 通用命令 General- `conda -V`：查看 conda 版本- `conda info`：查看 conda 系统信息- `conda clean --all`：清理缓存安装包，释放磁盘空间## 环境导出与共享- `conda env export &gt; environment.yml`：导出当前环境配置为 yml 文件- `conda env create -f environment.yml`：从 yml 文件一键重建环境</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>学习日记</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>conda</tag>
+      
+      <tag>Python</tag>
+      
+      <tag>环境管理</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>第一篇博客</title>
     <link href="/2026/09/30/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/"/>
     <url>/2026/09/30/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
