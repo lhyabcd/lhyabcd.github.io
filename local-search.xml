@@ -29,6 +29,25 @@
   
   
   <entry>
+    <title>python面向对象例子</title>
+    <link href="/2026/10/04/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BE%8B%E5%AD%90/"/>
+    <url>/2026/10/04/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BE%8B%E5%AD%90/</url>
+    
+    <content type="html"><![CDATA[<p>#代码示例</p><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs dns"><br>class Person:<br>    def __init__<span class="hljs-punctuation">(</span>self, start_happy<span class="hljs-punctuation">)</span>:<br>        self.happy = start_happy<br>    def feed_dog<span class="hljs-punctuation">(</span>self, some_dog<span class="hljs-punctuation">)</span>:<br>        some_dog.hunger -= <span class="hljs-number">20</span><br>        if some_dog.hunger &lt; <span class="hljs-number">0</span>:<br>            some_dog.hunger = <span class="hljs-number">0</span><br>        print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;狗饥饿度：&#123;some_dog.hunger&#125;&quot;</span><span class="hljs-punctuation">)</span><br>class Dog:<br>    def __init__<span class="hljs-punctuation">(</span>self, start_hunger<span class="hljs-punctuation">)</span>:<br>        self.hunger = start_hunger<br>    def play_with_person<span class="hljs-punctuation">(</span>self, some_person<span class="hljs-punctuation">)</span>:<br>        some_person.happy += <span class="hljs-number">15</span><br>        if some_person.happy &gt; <span class="hljs-number">100</span>:<br>            some_person.happy = <span class="hljs-number">100</span><br>        print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;人开心值：&#123;some_person.happy&#125;&quot;</span><span class="hljs-punctuation">)</span><br>person1 = Person<span class="hljs-punctuation">(</span><span class="hljs-number">40</span><span class="hljs-punctuation">)</span><br>dog1 = Dog<span class="hljs-punctuation">(</span><span class="hljs-number">70</span><span class="hljs-punctuation">)</span><br><br>print<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;==初始状态==&quot;</span><span class="hljs-punctuation">)</span><br>print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;人的开心值 = &#123;person1.happy&#125;&quot;</span><span class="hljs-punctuation">)</span><br>print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;狗的饥饿度 = &#123;dog1.hunger&#125;&quot;</span><span class="hljs-punctuation">)</span><br>person1.feed_dog<span class="hljs-punctuation">(</span>dog1<span class="hljs-punctuation">)</span><br>dog1.play_with_person<span class="hljs-punctuation">(</span>person1<span class="hljs-punctuation">)</span><br><br>print<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;==交互结束状态==&quot;</span><span class="hljs-punctuation">)</span><br>print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;人的开心值 = &#123;person1.happy&#125;&quot;</span><span class="hljs-punctuation">)</span><br>print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;狗的饥饿度 = &#123;dog1.hunger&#125;&quot;</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure><p>#运行图片<img src="/img/img3.png" alt="alt text"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>学习日记</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>conda学习记录</title>
     <link href="/2026/09/30/%E6%97%A5%E8%AE%B0/"/>
     <url>/2026/09/30/%E6%97%A5%E8%AE%B0/</url>
