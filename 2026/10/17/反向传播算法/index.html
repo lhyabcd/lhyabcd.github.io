@@ -1,0 +1,1049 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="LiuHongyan">
+  <meta name="keywords" content="200305">
+  
+    <meta name="description" content="反向传播算法 (BP) 原理与 Python 实现 三层前馈神经网络拟合 $\sin(x)$，从均方误差性能指标出发，利用链式法则定义神经元灵敏度，推导灵敏度从输出层向输入层逐层反向递推的公式，进而得到各层权值与偏置的梯度，最终给出梯度下降更新规则。文末附完整 Python (numpy) 实现，与 MATLAB 版本逐行对应。   目录 网络结构与前向传播 性能指标 (MSE) 链式法则与灵敏度">
+<meta property="og:type" content="article">
+<meta property="og:title" content="反向传播算法(BP)原理与Python实现">
+<meta property="og:url" content="http://example.com/2026/10/17/%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="我的技术博客">
+<meta property="og:description" content="反向传播算法 (BP) 原理与 Python 实现 三层前馈神经网络拟合 $\sin(x)$，从均方误差性能指标出发，利用链式法则定义神经元灵敏度，推导灵敏度从输出层向输入层逐层反向递推的公式，进而得到各层权值与偏置的梯度，最终给出梯度下降更新规则。文末附完整 Python (numpy) 实现，与 MATLAB 版本逐行对应。   目录 网络结构与前向传播 性能指标 (MSE) 链式法则与灵敏度">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-17T14:22:44.000Z">
+<meta property="article:modified_time" content="2026-10-17T14:40:58.196Z">
+<meta property="article:author" content="LiuHongyan">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="反向传播">
+<meta property="article:tag" content="神经网络">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>反向传播算法(BP)原理与Python实现 - 我的技术博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>LiuHongyan的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="反向传播算法(BP)原理与Python实现"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-10-17 22:22" pubdate>
+          2026年10月17日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          15k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          122 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">反向传播算法(BP)原理与Python实现</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="反向传播算法-BP-原理与-Python-实现"><a href="#反向传播算法-BP-原理与-Python-实现" class="headerlink" title="反向传播算法 (BP) 原理与 Python 实现"></a>反向传播算法 (BP) 原理与 Python 实现</h1><blockquote>
+<p>三层前馈神经网络拟合 $\sin(x)$，从均方误差性能指标出发，利用链式法则定义神经元<strong>灵敏度</strong>，推导灵敏度从输出层向输入层逐层反向递推的公式，进而得到各层权值与偏置的梯度，最终给出梯度下降更新规则。文末附完整 Python (<code>numpy</code>) 实现，与 MATLAB 版本逐行对应。</p>
+</blockquote>
+<hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li><a href="#1-%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E4%B8%8E%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD">网络结构与前向传播</a></li>
+<li><a href="#2-%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87-mse">性能指标 (MSE)</a></li>
+<li><a href="#3-%E9%93%BE%E5%BC%8F%E6%B3%95%E5%88%99%E4%B8%8E%E7%81%B5%E6%95%8F%E5%BA%A6">链式法则与灵敏度</a></li>
+<li><a href="#4-%E7%81%B5%E6%95%8F%E5%BA%A6%E7%9A%84%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD">灵敏度的反向传播</a></li>
+<li><a href="#5-%E8%BE%93%E5%87%BA%E5%B1%82%E7%81%B5%E6%95%8F%E5%BA%A6">输出层灵敏度</a></li>
+<li><a href="#6-%E6%A2%AF%E5%BA%A6%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%8F%82%E6%95%B0%E6%9B%B4%E6%96%B0">梯度计算与参数更新</a></li>
+<li><a href="#7-%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93">算法总结</a></li>
+<li><a href="#8-%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE%E4%B8%8E-python-%E5%AE%8C%E6%95%B4%E5%AE%9E%E7%8E%B0">实验设置与 Python 完整实现</a></li>
+<li><a href="#9-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%E4%B8%8E%E5%B8%B8%E8%A7%81%E5%9D%91">注意事项与常见坑</a></li>
+</ol>
+<hr>
+<h2 id="1-网络结构与前向传播"><a href="#1-网络结构与前向传播" class="headerlink" title="1. 网络结构与前向传播"></a>1. 网络结构与前向传播</h2><p>考虑一个具有 $M$ 层的前馈神经网络。第 $m$ 层有 $S^m$ 个神经元，权值矩阵 $\boldsymbol{W}^m \in \mathbb{R}^{S^m \times S^{m-1}}$，偏置 $\boldsymbol{b}^m \in \mathbb{R}^{S^m}$，激活函数 $\boldsymbol{f}^m$。</p>
+<h3 id="1-1-三层网络结构"><a href="#1-1-三层网络结构" class="headerlink" title="1.1 三层网络结构"></a>1.1 三层网络结构</h3><p>本实验使用三层网络：</p>
+<p>$$<br>\underbrace{1}<em>{\text{输入}} ;\to; \underbrace{12}</em>{\text{隐藏层 1}} ;\to; \underbrace{8}<em>{\text{隐藏层 2}} ;\to; \underbrace{1}</em>{\text{输出}}<br>$$</p>
+<p>隐藏层激活函数为 $\tanh$，输出层为线性激活（恒等映射），适合函数拟合任务。</p>
+<h3 id="1-2-前向传播公式"><a href="#1-2-前向传播公式" class="headerlink" title="1.2 前向传播公式"></a>1.2 前向传播公式</h3><p>给定输入 $\boldsymbol{p}$，逐层计算净输入与激活输出：</p>
+<p>$$<br>\boldsymbol{a}^0 &#x3D; \boldsymbol{p}<br>$$</p>
+<p>$$<br>\boldsymbol{n}^m &#x3D; \boldsymbol{W}^m \boldsymbol{a}^{m-1} + \boldsymbol{b}^m \tag{1}<br>$$</p>
+<p>$$<br>\boldsymbol{a}^m &#x3D; \boldsymbol{f}^m(\boldsymbol{n}^m), \quad m &#x3D; 1, \dots, M \tag{2}<br>$$</p>
+<p>最终网络输出为 $\boldsymbol{a} &#x3D; \boldsymbol{a}^M$。写成嵌套形式：</p>
+<p>$$<br>\boldsymbol{a}^3 &#x3D; \boldsymbol{f}^3!\left(\boldsymbol{W}^3\boldsymbol{f}^2!\left(\boldsymbol{W}^2\boldsymbol{f}^1!\left(\boldsymbol{W}^1\boldsymbol{p}+\boldsymbol{b}^1\right)+\boldsymbol{b}^2\right)+\boldsymbol{b}^3\right)<br>$$</p>
+<p><strong>Python 对照：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">forward_network</span>(<span class="hljs-params">net, x</span>):<br>    a0 = x<br>    n1 = net[<span class="hljs-string">&quot;W1&quot;</span>] @ a0 + net[<span class="hljs-string">&quot;b1&quot;</span>];  a1 = np.tanh(n1)<br>    n2 = net[<span class="hljs-string">&quot;W2&quot;</span>] @ a1 + net[<span class="hljs-string">&quot;b2&quot;</span>];  a2 = np.tanh(n2)<br>    n3 = net[<span class="hljs-string">&quot;W3&quot;</span>] @ a2 + net[<span class="hljs-string">&quot;b3&quot;</span>];  a3 = n3          <span class="hljs-comment"># 线性输出</span><br>    <span class="hljs-keyword">return</span> &#123;<span class="hljs-string">&quot;a0&quot;</span>:a0,<span class="hljs-string">&quot;n1&quot;</span>:n1,<span class="hljs-string">&quot;a1&quot;</span>:a1,<span class="hljs-string">&quot;n2&quot;</span>:n2,<span class="hljs-string">&quot;a2&quot;</span>:a2,<span class="hljs-string">&quot;n3&quot;</span>:n3,<span class="hljs-string">&quot;a3&quot;</span>:a3&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其中 <code>@</code> 为矩阵乘法，对应 MATLAB 的 <code>*</code>；<code>*</code> 为逐元素乘法，对应 MATLAB 的 <code>.*</code>。</p>
+<hr>
+<h2 id="2-性能指标-MSE"><a href="#2-性能指标-MSE" class="headerlink" title="2. 性能指标 (MSE)"></a>2. 性能指标 (MSE)</h2><p>训练样本集为 ${(\boldsymbol{p}_q, \boldsymbol{t}<em>q)}</em>{q&#x3D;1}^{Q}$，其中 $\boldsymbol{t}_q$ 为目标输出。定义误差 $\boldsymbol{e} &#x3D; \boldsymbol{t} - \boldsymbol{a}$。</p>
+<p>均方误差 (Mean Square Error, MSE)：</p>
+<p>$$<br>F(\boldsymbol{x}) &#x3D; E[\boldsymbol{e}^T\boldsymbol{e}] &#x3D; E!\left[(\boldsymbol{t}-\boldsymbol{a})^T(\boldsymbol{t}-\boldsymbol{a})\right]<br>$$</p>
+<p>其中 $\boldsymbol{x}$ 为网络所有权值和偏置组成的参数向量。</p>
+<p>实际训练中用瞬时平方误差近似：</p>
+<p>$$<br>\widehat{F}(\boldsymbol{x}) &#x3D; \boldsymbol{e}^T(k),\boldsymbol{e}(k) &#x3D; (\boldsymbol{t}(k)-\boldsymbol{a}(k))^T(\boldsymbol{t}(k)-\boldsymbol{a}(k))<br>$$</p>
+<p>本实验为批量训练（全部 $N$ 个样本同时输入），损失为：</p>
+<p>$$<br>L &#x3D; \frac{1}{N}\sum_{q&#x3D;1}^{N}(t_q - a_q)^2<br>$$</p>
+<hr>
+<h2 id="3-链式法则与灵敏度"><a href="#3-链式法则与灵敏度" class="headerlink" title="3. 链式法则与灵敏度"></a>3. 链式法则与灵敏度</h2><h3 id="3-1-为什么需要链式法则"><a href="#3-1-为什么需要链式法则" class="headerlink" title="3.1 为什么需要链式法则"></a>3.1 为什么需要链式法则</h3><p>误差函数 $\widehat{F}$ 并不是隐藏层权值的显式函数，而是通过网络的多层复合映射间接依赖于这些权值。因此必须用链式法则计算梯度。</p>
+<p>链式法则：若 $f &#x3D; f(n)$，$n &#x3D; n(w)$，则</p>
+<p>$$<br>\frac{df(n(w))}{dw} &#x3D; \frac{df(n)}{dn} \cdot \frac{dn(w)}{dw}<br>$$</p>
+<p>对第 $m$ 层权值 $w_{i,j}^m$ 和偏置 $b_i^m$：</p>
+<p>$$<br>\frac{\partial\widehat{F}}{\partial w_{i,j}^m} &#x3D; \frac{\partial\widehat{F}}{\partial n_i^m}\frac{\partial n_i^m}{\partial w_{i,j}^m}, \qquad<br>\frac{\partial\widehat{F}}{\partial b_i^m} &#x3D; \frac{\partial\widehat{F}}{\partial n_i^m}\frac{\partial n_i^m}{\partial b_i^m}<br>$$</p>
+<h3 id="3-2-净输入对参数的偏导"><a href="#3-2-净输入对参数的偏导" class="headerlink" title="3.2 净输入对参数的偏导"></a>3.2 净输入对参数的偏导</h3><p>第 $m$ 层第 $i$ 个神经元的净输入为</p>
+<p>$$<br>n_i^m &#x3D; \sum_{j&#x3D;1}^{S^{m-1}} w_{i,j}^m a_j^{m-1} + b_i^m<br>$$</p>
+<p>因此</p>
+<p>$$<br>\frac{\partial n_i^m}{\partial w_{i,j}^m} &#x3D; a_j^{m-1}, \qquad<br>\frac{\partial n_i^m}{\partial b_i^m} &#x3D; 1<br>$$</p>
+<h3 id="3-3-灵敏度的定义"><a href="#3-3-灵敏度的定义" class="headerlink" title="3.3 灵敏度的定义"></a>3.3 灵敏度的定义</h3><p>定义第 $m$ 层第 $i$ 个神经元的<strong>灵敏度</strong>：</p>
+<p>$$<br>s_i^m \triangleq \frac{\partial\widehat{F}}{\partial n_i^m}<br>$$</p>
+<p>它描述性能指标对该神经元净输入变化的敏感程度。写成向量形式：</p>
+<p>$$<br>\boldsymbol{s}^m \triangleq \frac{\partial\widehat{F}}{\partial\boldsymbol{n}^m}<br>&#x3D; \begin{bmatrix}\partial\widehat{F}&#x2F;\partial n_1^m \ \vdots \ \partial\widehat{F}&#x2F;\partial n_{S^m}^m\end{bmatrix}<br>$$</p>
+<p>于是权值和偏置的梯度可写为：</p>
+<p>$$<br>\boxed{\frac{\partial\widehat{F}}{\partial w_{i,j}^m} &#x3D; s_i^m a_j^{m-1}}, \qquad<br>\boxed{\frac{\partial\widehat{F}}{\partial b_i^m} &#x3D; s_i^m}<br>$$</p>
+<p>矩阵形式：</p>
+<p>$$<br>\boxed{\frac{\partial\widehat{F}}{\partial\boldsymbol{W}^m} &#x3D; \boldsymbol{s}^m(\boldsymbol{a}^{m-1})^T}, \qquad<br>\boxed{\frac{\partial\widehat{F}}{\partial\boldsymbol{b}^m} &#x3D; \boldsymbol{s}^m}<br>$$</p>
+<blockquote>
+<p><strong>核心问题</strong>：只要能算出各层灵敏度 $\boldsymbol{s}^m$，就能直接得到所有参数的梯度。而灵敏度可以从最后一层向前逐层递推——这正是<strong>反向传播</strong>名称的由来。</p>
+</blockquote>
+<hr>
+<h2 id="4-灵敏度的反向传播"><a href="#4-灵敏度的反向传播" class="headerlink" title="4. 灵敏度的反向传播"></a>4. 灵敏度的反向传播</h2><h3 id="4-1-Jacobian-矩阵"><a href="#4-1-Jacobian-矩阵" class="headerlink" title="4.1 Jacobian 矩阵"></a>4.1 Jacobian 矩阵</h3><p>考虑净输入的层间 Jacobian 矩阵：</p>
+<p>$$<br>\frac{\partial\boldsymbol{n}^{m+1}}{\partial\boldsymbol{n}^m}<br>\triangleq<br>\begin{bmatrix}<br>\partial n_1^{m+1}&#x2F;\partial n_1^m &amp; \cdots &amp; \partial n_1^{m+1}&#x2F;\partial n_{S^m}^m\<br>\vdots &amp; \ddots &amp; \vdots\<br>\partial n_{S^{m+1}}^{m+1}&#x2F;\partial n_1^m &amp; \cdots &amp; \partial n_{S^{m+1}}^{m+1}&#x2F;\partial n_{S^m}^m<br>\end{bmatrix}<br>$$</p>
+<p>考察第 $(i,j)$ 个元素：</p>
+<p>$$<br>\frac{\partial n_i^{m+1}}{\partial n_j^m}<br>&#x3D; \frac{\partial\left(\sum_l w_{i,l}^{m+1}a_l^{m}+b_i^{m+1}\right)}{\partial n_j^m}<br>&#x3D; w_{i,j}^{m+1}\frac{\partial a_j^m}{\partial n_j^m}<br>&#x3D; w_{i,j}^{m+1}\dot{f}^m(n_j^m)<br>$$</p>
+<p>其中 $\dot{f}^m(n_j^m) \triangleq \partial f^m(n_j^m)&#x2F;\partial n_j^m$ 为激活函数导数。</p>
+<p>因此 Jacobian 矩阵为</p>
+<p>$$<br>\boxed{\frac{\partial\boldsymbol{n}^{m+1}}{\partial\boldsymbol{n}^m} &#x3D; \boldsymbol{W}^{m+1}\dot{\boldsymbol{F}}^m(\boldsymbol{n}^m)}<br>$$</p>
+<p>其中</p>
+<p>$$<br>\dot{\boldsymbol{F}}^m(\boldsymbol{n}^m)<br>&#x3D; \mathrm{diag}!\left(\dot{f}^m(n_1^m),\dots,\dot{f}^m(n_{S^m}^m)\right)<br>$$</p>
+<p>是由第 $m$ 层各神经元激活函数导数组成的对角矩阵。</p>
+<h3 id="4-2-灵敏度递推公式"><a href="#4-2-灵敏度递推公式" class="headerlink" title="4.2 灵敏度递推公式"></a>4.2 灵敏度递推公式</h3><p>由矩阵形式的链式法则：</p>
+<p>$$<br>\boldsymbol{s}^m &#x3D; \frac{\partial\widehat{F}}{\partial\boldsymbol{n}^m}<br>&#x3D; \left(\frac{\partial\boldsymbol{n}^{m+1}}{\partial\boldsymbol{n}^m}\right)^T<br>  \frac{\partial\widehat{F}}{\partial\boldsymbol{n}^{m+1}}<br>&#x3D; \dot{\boldsymbol{F}}^m(\boldsymbol{n}^m)(\boldsymbol{W}^{m+1})^T\boldsymbol{s}^{m+1}<br>$$</p>
+<p>即</p>
+<p>$$<br>\boxed{\boldsymbol{s}^m &#x3D; \dot{\boldsymbol{F}}^m(\boldsymbol{n}^m)(\boldsymbol{W}^{m+1})^T\boldsymbol{s}^{m+1}}<br>$$</p>
+<p>灵敏度按</p>
+<p>$$<br>\boldsymbol{s}^M \to \boldsymbol{s}^{M-1} \to \cdots \to \boldsymbol{s}^2 \to \boldsymbol{s}^1<br>$$</p>
+<p>的方向逐层向前传播，与网络信息的前向传播方向正好相反。</p>
+<hr>
+<h2 id="5-输出层灵敏度"><a href="#5-输出层灵敏度" class="headerlink" title="5. 输出层灵敏度"></a>5. 输出层灵敏度</h2><p>递推需要初始值，即最后一层（输出层）的灵敏度 $\boldsymbol{s}^M$。</p>
+<p>对第 $i$ 个输出神经元：</p>
+<p>$$<br>s_i^M &#x3D; \frac{\partial\widehat{F}}{\partial n_i^M}<br>&#x3D; \frac{\partial\sum_{j&#x3D;1}^{S^M}(t_j-a_j)^2}{\partial n_i^M}<br>&#x3D; -2(t_i-a_i)\frac{\partial a_i}{\partial n_i^M}<br>$$</p>
+<p>由于 $a_i &#x3D; a_i^M &#x3D; f^M(n_i^M)$，有 $\partial a_i&#x2F;\partial n_i^M &#x3D; \dot{f}^M(n_i^M)$，故</p>
+<p>$$<br>s_i^M &#x3D; -2(t_i-a_i)\dot{f}^M(n_i^M)<br>$$</p>
+<p>矩阵形式：</p>
+<p>$$<br>\boxed{\boldsymbol{s}^M &#x3D; -2\dot{\boldsymbol{F}}^M(\boldsymbol{n}^M)(\boldsymbol{t}-\boldsymbol{a})}<br>$$</p>
+<p><strong>本实验的批量形式</strong>：对 $N$ 个样本取平均，并注意 $(\boldsymbol{a}-\boldsymbol{t}) &#x3D; -(\boldsymbol{t}-\boldsymbol{a})$：</p>
+<p>$$<br>\boldsymbol{s}^3 &#x3D; \frac{2}{N}(\boldsymbol{a}^3-\boldsymbol{t}) \odot \dot{\boldsymbol{f}}^3(\boldsymbol{n}^3)<br>$$</p>
+<p>输出层为线性激活 $\dot{f}^3 &#x3D; 1$，因此 $\boldsymbol{s}^3 &#x3D; \frac{2}{N}(\boldsymbol{a}^3-\boldsymbol{t})$。</p>
+<p><strong>Python 对照：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">N = target.shape[<span class="hljs-number">1</span>]<br><span class="hljs-comment"># 输出层灵敏度 (线性激活, 导数为 1)</span><br>s3 = (<span class="hljs-number">2.0</span> / N) * (a3 - target) * np.ones_like(n3)<br><span class="hljs-comment"># 第二层灵敏度 (tanh 导数 = 1 - tanh^2)</span><br>s2 = (<span class="hljs-number">1</span> - np.tanh(n2)**<span class="hljs-number">2</span>) * (W3.T @ s3)<br><span class="hljs-comment"># 第一层灵敏度</span><br>s1 = (<span class="hljs-number">1</span> - np.tanh(n1)**<span class="hljs-number">2</span>) * (W2.T @ s2)<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="6-梯度计算与参数更新"><a href="#6-梯度计算与参数更新" class="headerlink" title="6. 梯度计算与参数更新"></a>6. 梯度计算与参数更新</h2><h3 id="6-1-梯度"><a href="#6-1-梯度" class="headerlink" title="6.1 梯度"></a>6.1 梯度</h3><p>各层权值和偏置的梯度：</p>
+<p>$$<br>\begin{aligned}<br>\frac{\partial\widehat{F}}{\partial\boldsymbol{W}^3} &amp;&#x3D; \boldsymbol{s}^3(\boldsymbol{a}^2)^T, &amp;<br>\frac{\partial\widehat{F}}{\partial\boldsymbol{b}^3} &amp;&#x3D; \sum_{q&#x3D;1}^{N}\boldsymbol{s}^3_q,\<br>\frac{\partial\widehat{F}}{\partial\boldsymbol{W}^2} &amp;&#x3D; \boldsymbol{s}^2(\boldsymbol{a}^1)^T, &amp;<br>\frac{\partial\widehat{F}}{\partial\boldsymbol{b}^2} &amp;&#x3D; \sum_{q&#x3D;1}^{N}\boldsymbol{s}^2_q,\<br>\frac{\partial\widehat{F}}{\partial\boldsymbol{W}^1} &amp;&#x3D; \boldsymbol{s}^1(\boldsymbol{a}^0)^T, &amp;<br>\frac{\partial\widehat{F}}{\partial\boldsymbol{b}^1} &amp;&#x3D; \sum_{q&#x3D;1}^{N}\boldsymbol{s}^1_q.<br>\end{aligned}<br>$$</p>
+<p>偏置梯度需要对批量中所有样本求和（每列对应一个样本）。</p>
+<p><strong>Python 对照：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">grad = &#123;<br>    <span class="hljs-string">&quot;W3&quot;</span>: s3 @ a2.T,  <span class="hljs-string">&quot;b3&quot;</span>: np.<span class="hljs-built_in">sum</span>(s3, axis=<span class="hljs-number">1</span>, keepdims=<span class="hljs-literal">True</span>),<br>    <span class="hljs-string">&quot;W2&quot;</span>: s2 @ a1.T,  <span class="hljs-string">&quot;b2&quot;</span>: np.<span class="hljs-built_in">sum</span>(s2, axis=<span class="hljs-number">1</span>, keepdims=<span class="hljs-literal">True</span>),<br>    <span class="hljs-string">&quot;W1&quot;</span>: s1 @ a0.T,  <span class="hljs-string">&quot;b1&quot;</span>: np.<span class="hljs-built_in">sum</span>(s1, axis=<span class="hljs-number">1</span>, keepdims=<span class="hljs-literal">True</span>),<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="6-2-梯度下降更新"><a href="#6-2-梯度下降更新" class="headerlink" title="6.2 梯度下降更新"></a>6.2 梯度下降更新</h3><p>学习率为 $\alpha$，参数更新规则：</p>
+<p>$$<br>\boxed{\boldsymbol{W}^m(k+1) &#x3D; \boldsymbol{W}^m(k) - \alpha,\boldsymbol{s}^m(\boldsymbol{a}^{m-1})^T}, \qquad<br>\boxed{\boldsymbol{b}^m(k+1) &#x3D; \boldsymbol{b}^m(k) - \alpha,\boldsymbol{s}^m}<br>$$</p>
+<p><strong>Python 对照：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> (<span class="hljs-string">&quot;W1&quot;</span>,<span class="hljs-string">&quot;b1&quot;</span>,<span class="hljs-string">&quot;W2&quot;</span>,<span class="hljs-string">&quot;b2&quot;</span>,<span class="hljs-string">&quot;W3&quot;</span>,<span class="hljs-string">&quot;b3&quot;</span>):<br>    net[key] -= alpha * grad[key]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="7-算法总结"><a href="#7-算法总结" class="headerlink" title="7. 算法总结"></a>7. 算法总结</h2><p>对于一个具有 $M$ 层的前馈神经网络，反向传播算法分为三个主要步骤：</p>
+<p><strong>1. 前向传播</strong>：给定输入 $\boldsymbol{a}^0 &#x3D; \boldsymbol{p}$，依次计算</p>
+<p>$$<br>\boldsymbol{n}^m &#x3D; \boldsymbol{W}^m\boldsymbol{a}^{m-1} + \boldsymbol{b}^m, \qquad<br>\boldsymbol{a}^m &#x3D; \boldsymbol{f}^m(\boldsymbol{n}^m), \quad m&#x3D;1,\dots,M<br>$$</p>
+<p>得到网络输出 $\boldsymbol{a} &#x3D; \boldsymbol{a}^M$。</p>
+<p><strong>2. 反向传播灵敏度</strong>：先由误差计算输出层灵敏度</p>
+<p>$$<br>\boldsymbol{s}^M &#x3D; -2\dot{\boldsymbol{F}}^M(\boldsymbol{n}^M)(\boldsymbol{t}-\boldsymbol{a})<br>$$</p>
+<p>然后按</p>
+<p>$$<br>\boldsymbol{s}^m &#x3D; \dot{\boldsymbol{F}}^m(\boldsymbol{n}^m)(\boldsymbol{W}^{m+1})^T\boldsymbol{s}^{m+1}<br>$$</p>
+<p>从 $m &#x3D; M-1$ 一直递推到 $m &#x3D; 1$。</p>
+<p><strong>3. 更新权值和偏置</strong>：</p>
+<p>$$<br>\frac{\partial\widehat{F}}{\partial\boldsymbol{W}^m} &#x3D; \boldsymbol{s}^m(\boldsymbol{a}^{m-1})^T, \quad<br>\frac{\partial\widehat{F}}{\partial\boldsymbol{b}^m} &#x3D; \boldsymbol{s}^m<br>$$</p>
+<p>$$<br>\boldsymbol{W}^m(k+1) &#x3D; \boldsymbol{W}^m(k) - \alpha\boldsymbol{s}^m(\boldsymbol{a}^{m-1})^T, \quad<br>\boldsymbol{b}^m(k+1) &#x3D; \boldsymbol{b}^m(k) - \alpha\boldsymbol{s}^m<br>$$</p>
+<p>核心流程可概括为：</p>
+<p>$$<br>\boxed{\text{前向计算输出} ;\to; \text{计算输出误差} ;\to; \text{反向传播灵敏度} ;\to; \text{计算梯度并更新参数}}<br>$$</p>
+<hr>
+<h2 id="8-实验设置与-Python-完整实现"><a href="#8-实验设置与-Python-完整实现" class="headerlink" title="8. 实验设置与 Python 完整实现"></a>8. 实验设置与 Python 完整实现</h2><h3 id="8-1-实验设置"><a href="#8-1-实验设置" class="headerlink" title="8.1 实验设置"></a>8.1 实验设置</h3><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>设置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>训练数据</td>
+<td>$x \in [0, 2\pi]$，步长 $0.1$，共 $N&#x3D;63$ 个样本，$y &#x3D; \sin(x)$</td>
+</tr>
+<tr>
+<td>网络结构</td>
+<td>$1 \to 12 \to 8 \to 1$</td>
+</tr>
+<tr>
+<td>隐藏层激活</td>
+<td>$\tanh$</td>
+</tr>
+<tr>
+<td>输出层激活</td>
+<td>线性 (恒等)</td>
+</tr>
+<tr>
+<td>权值初始化</td>
+<td>$0.5 \times \mathcal{N}(0,1)$，随机种子 $1$</td>
+</tr>
+<tr>
+<td>偏置初始化</td>
+<td>$0$</td>
+</tr>
+<tr>
+<td>损失函数</td>
+<td>MSE</td>
+</tr>
+<tr>
+<td>优化方法</td>
+<td>批量梯度下降</td>
+</tr>
+<tr>
+<td>学习率</td>
+<td>$\alpha &#x3D; 0.05$</td>
+</tr>
+<tr>
+<td>最大迭代</td>
+<td>$5000$</td>
+</tr>
+<tr>
+<td>停止阈值</td>
+<td>$\mathrm{MSE} &lt; 10^{-5}$</td>
+</tr>
+</tbody></table>
+<h3 id="8-2-MATLAB-与-Python-关键运算对照"><a href="#8-2-MATLAB-与-Python-关键运算对照" class="headerlink" title="8.2 MATLAB 与 Python 关键运算对照"></a>8.2 MATLAB 与 Python 关键运算对照</h3><table>
+<thead>
+<tr>
+<th>运算</th>
+<th>MATLAB</th>
+<th>Python (numpy)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>矩阵乘法</td>
+<td><code>A * B</code></td>
+<td><code>A @ B</code></td>
+</tr>
+<tr>
+<td>逐元素乘法</td>
+<td><code>A .* B</code></td>
+<td><code>A * B</code></td>
+</tr>
+<tr>
+<td>转置</td>
+<td><code>A&#39;</code></td>
+<td><code>A.T</code></td>
+</tr>
+<tr>
+<td>按行求和</td>
+<td><code>sum(A, 2)</code></td>
+<td><code>np.sum(A, axis=1, keepdims=True)</code></td>
+</tr>
+<tr>
+<td>标准正态随机</td>
+<td><code>randn(r,c)</code></td>
+<td><code>np.random.randn(r, c)</code></td>
+</tr>
+<tr>
+<td>设置随机种子</td>
+<td><code>rng(1)</code></td>
+<td><code>np.random.seed(1)</code></td>
+</tr>
+<tr>
+<td>列向量</td>
+<td><code>zeros(S,1)</code></td>
+<td><code>np.zeros((S,1))</code></td>
+</tr>
+</tbody></table>
+<h3 id="8-3-完整训练循环"><a href="#8-3-完整训练循环" class="headerlink" title="8.3 完整训练循环"></a>8.3 完整训练循环</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    x, target = generate_sin_data()          <span class="hljs-comment"># 生成数据</span><br>    net = init_network()                      <span class="hljs-comment"># 初始化网络</span><br>    alpha, max_epoch, loss_tol = <span class="hljs-number">0.05</span>, <span class="hljs-number">5000</span>, <span class="hljs-number">1e-5</span><br>    loss_history = []<br><br>    <span class="hljs-keyword">for</span> epoch <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, max_epoch + <span class="hljs-number">1</span>):<br>        cache = forward_network(net, x)       <span class="hljs-comment"># 前向传播</span><br>        grad  = bp_backward(net, cache, target)  <span class="hljs-comment"># 反向传播</span><br>        net   = update_network(net, grad, alpha) <span class="hljs-comment"># 参数更新</span><br><br>        cache_new = forward_network(net, x)<br>        loss_new  = np.mean((target - cache_new[<span class="hljs-string">&quot;a3&quot;</span>])**<span class="hljs-number">2</span>)<br>        loss_history.append(loss_new)<br><br>        <span class="hljs-keyword">if</span> loss_new &lt; loss_tol:               <span class="hljs-comment"># 提前停止</span><br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;训练完成: Epoch=<span class="hljs-subst">&#123;epoch&#125;</span>, MSE=<span class="hljs-subst">&#123;loss_new:<span class="hljs-number">.8</span>e&#125;</span>&quot;</span>)<br>            <span class="hljs-keyword">break</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="9-注意事项与常见坑"><a href="#9-注意事项与常见坑" class="headerlink" title="9. 注意事项与常见坑"></a>9. 注意事项与常见坑</h2><ol>
+<li><strong>维度保持二维</strong>：输入 $\boldsymbol{x}$ 保持为 $(1,N)$ 二维数组而非一维向量，这样矩阵乘法 $\boldsymbol{W}^1 @ \boldsymbol{x}$ 的维度才能严格对应 MATLAB。</li>
+<li><strong>偏置梯度要求和</strong>：批量训练时每列对应一个样本，偏置梯度需对所有样本求和（<code>axis=1, keepdims=True</code>），否则维度不匹配。</li>
+<li><strong>输出层用线性激活</strong>：函数拟合任务输出层不要用 sigmoid&#x2F;tanh，否则输出被限制在有限区间，无法拟合任意幅值。</li>
+<li><strong>灵敏度符号</strong>：$\boldsymbol{s}^M &#x3D; -2\dot{\boldsymbol{F}}^M(\boldsymbol{t}-\boldsymbol{a})$ 等价于 $\frac{2}{N}(\boldsymbol{a}-\boldsymbol{t}) \odot \dot{\boldsymbol{f}}$，二者符号一致，不要写反。</li>
+<li><strong>随机种子</strong>：<code>np.random.seed(1)</code> 对应 MATLAB <code>rng(1)</code>，保证每次运行初始化相同。</li>
+</ol>
+<hr>
+<blockquote>
+<p>完整可运行代码见：</p>
+</blockquote>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br></pre></td><td class="code"><pre><code class="hljs dns"><br>import numpy as np<br>import matplotlib.pyplot as plt<br>def generate_sin_data<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>:<br>    x = np.arange<span class="hljs-punctuation">(</span><span class="hljs-number">0</span>, <span class="hljs-number">2</span> * np.pi, <span class="hljs-number">0</span>.<span class="hljs-number">1</span><span class="hljs-punctuation">)</span>.reshape<span class="hljs-punctuation">(</span><span class="hljs-number">1</span>, -<span class="hljs-number">1</span><span class="hljs-punctuation">)</span><br>    y = np.sin<span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span><br>    return x, y<br>def layer1_activation<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span>:<br>    return np.tanh<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span><br>def layer1_activation_derivative<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span>:<br>    return <span class="hljs-number">1</span>.<span class="hljs-number">0</span> - np.tanh<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span> ** <span class="hljs-number">2</span><br>def layer2_activation<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span>:<br>    return np.tanh<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span><br>def layer2_activation_derivative<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span>:<br>    return <span class="hljs-number">1</span>.<span class="hljs-number">0</span> - np.tanh<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span> ** <span class="hljs-number">2</span><br>def layer3_activation<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span>:<br>    return n<br>def layer3_activation_derivative<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span>:<br>    return np.ones_like<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span><br>def init_network<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>:<br>    np.random.seed<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span>  # 对应 MATLAB rng<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span><br>    S0, S1, S2, S3 = <span class="hljs-number">1</span>, <span class="hljs-number">12</span>, <span class="hljs-number">8</span>, <span class="hljs-number">1</span><br>    net = &#123;<br>        <span class="hljs-string">&quot;W1&quot;</span>: <span class="hljs-number">0</span>.<span class="hljs-number">5</span> * np.random.randn<span class="hljs-punctuation">(</span>S1, S0<span class="hljs-punctuation">)</span>,<br>        <span class="hljs-string">&quot;W2&quot;</span>: <span class="hljs-number">0</span>.<span class="hljs-number">5</span> * np.random.randn<span class="hljs-punctuation">(</span>S2, S1<span class="hljs-punctuation">)</span>,<br>        <span class="hljs-string">&quot;W3&quot;</span>: <span class="hljs-number">0</span>.<span class="hljs-number">5</span> * np.random.randn<span class="hljs-punctuation">(</span>S3, S2<span class="hljs-punctuation">)</span>,<br>        <span class="hljs-string">&quot;b1&quot;</span>: np.zeros<span class="hljs-punctuation">(</span><span class="hljs-punctuation">(</span>S1, <span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>,<br>        <span class="hljs-string">&quot;b2&quot;</span>: np.zeros<span class="hljs-punctuation">(</span><span class="hljs-punctuation">(</span>S2, <span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>,<br>        <span class="hljs-string">&quot;b3&quot;</span>: np.zeros<span class="hljs-punctuation">(</span><span class="hljs-punctuation">(</span>S3, <span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>,<br>    &#125;<br>    return net<br>def forward_network<span class="hljs-punctuation">(</span>net, x<span class="hljs-punctuation">)</span>:<br>    W1, W2, W3 = net[<span class="hljs-string">&quot;W1&quot;</span>], net[<span class="hljs-string">&quot;W2&quot;</span>], net[<span class="hljs-string">&quot;W3&quot;</span>]<br>    b1, b2, b3 = net[<span class="hljs-string">&quot;b1&quot;</span>], net[<span class="hljs-string">&quot;b2&quot;</span>], net[<span class="hljs-string">&quot;b3&quot;</span>]<br>    # 输入层<br>    a0 = x<br>    # 第一层<br>    n1 = W1 @ a0 + b1<br>    a1 = layer1_activation<span class="hljs-punctuation">(</span>n1<span class="hljs-punctuation">)</span><br>    # 第二层<br>    n2 = W2 @ a1 + b2<br>    a2 = layer2_activation<span class="hljs-punctuation">(</span>n2<span class="hljs-punctuation">)</span><br>    # 第三层 <span class="hljs-punctuation">(</span>输出层<span class="hljs-punctuation">)</span><br>    n3 = W3 @ a2 + b3<br>    a3 = layer3_activation<span class="hljs-punctuation">(</span>n3<span class="hljs-punctuation">)</span><br>    cache = &#123;<br>        <span class="hljs-string">&quot;a0&quot;</span>: a0,<br>        <span class="hljs-string">&quot;n1&quot;</span>: n1, <span class="hljs-string">&quot;a1&quot;</span>: a1,<br>        <span class="hljs-string">&quot;n2&quot;</span>: n2, <span class="hljs-string">&quot;a2&quot;</span>: a2,<br>        <span class="hljs-string">&quot;n3&quot;</span>: n3, <span class="hljs-string">&quot;a3&quot;</span>: a3,<br>    &#125;<br>    return cache<br>def bp_backward<span class="hljs-punctuation">(</span>net, cache, target<span class="hljs-punctuation">)</span>:<br>    N = target.shape[<span class="hljs-number">1</span>]  # 样本数量<br>    a0 = cache[<span class="hljs-string">&quot;a0&quot;</span>]<br>    n1, a1 = cache[<span class="hljs-string">&quot;n1&quot;</span>], cache[<span class="hljs-string">&quot;a1&quot;</span>]<br>    n2, a2 = cache[<span class="hljs-string">&quot;n2&quot;</span>], cache[<span class="hljs-string">&quot;a2&quot;</span>]<br>    n3, a3 = cache[<span class="hljs-string">&quot;n3&quot;</span>], cache[<span class="hljs-string">&quot;a3&quot;</span>]<br>    W2, W3 = net[<span class="hljs-string">&quot;W2&quot;</span>], net[<span class="hljs-string">&quot;W3&quot;</span>]<br>    # ---- 第三层<span class="hljs-punctuation">(</span>输出层<span class="hljs-punctuation">)</span>灵敏度 ----<br>    df3 = layer3_activation_derivative<span class="hljs-punctuation">(</span>n3<span class="hljs-punctuation">)</span><br>    s3 = <span class="hljs-punctuation">(</span><span class="hljs-number">2</span>.<span class="hljs-number">0</span> / N<span class="hljs-punctuation">)</span> * <span class="hljs-punctuation">(</span>a3 - target<span class="hljs-punctuation">)</span> * df3<br>    # ---- 第二层灵敏度 ----<br>    df2 = layer2_activation_derivative<span class="hljs-punctuation">(</span>n2<span class="hljs-punctuation">)</span><br>    s2 = df2 * <span class="hljs-punctuation">(</span>W3.T @ s3<span class="hljs-punctuation">)</span><br>    # ---- 第一层灵敏度 ----<br>    df1 = layer1_activation_derivative<span class="hljs-punctuation">(</span>n1<span class="hljs-punctuation">)</span><br>    s1 = df1 * <span class="hljs-punctuation">(</span>W2.T @ s2<span class="hljs-punctuation">)</span><br>    # ---- 权值梯度 ----<br>    grad = &#123;<br>        <span class="hljs-string">&quot;W3&quot;</span>: s3 @ a2.T,<br>        <span class="hljs-string">&quot;W2&quot;</span>: s2 @ a1.T,<br>        <span class="hljs-string">&quot;W1&quot;</span>: s1 @ a0.T,<br>        # ---- 偏置梯度 <span class="hljs-punctuation">(</span>对所有样本求和, 保持列向量<span class="hljs-punctuation">)</span> ----<br>        <span class="hljs-string">&quot;b3&quot;</span>: np.sum<span class="hljs-punctuation">(</span>s3, axis=<span class="hljs-number">1</span>, keepdims=True<span class="hljs-punctuation">)</span>,<br>        <span class="hljs-string">&quot;b2&quot;</span>: np.sum<span class="hljs-punctuation">(</span>s2, axis=<span class="hljs-number">1</span>, keepdims=True<span class="hljs-punctuation">)</span>,<br>        <span class="hljs-string">&quot;b1&quot;</span>: np.sum<span class="hljs-punctuation">(</span>s1, axis=<span class="hljs-number">1</span>, keepdims=True<span class="hljs-punctuation">)</span>,<br>    &#125;<br>    return grad<br>def update_network<span class="hljs-punctuation">(</span>net, grad, alpha<span class="hljs-punctuation">)</span>:<br>    for <span class="hljs-keyword">key</span> <span class="hljs-type">in</span> <span class="hljs-punctuation">(</span><span class="hljs-string">&quot;W1&quot;</span>, <span class="hljs-string">&quot;b1&quot;</span>, <span class="hljs-string">&quot;W2&quot;</span>, <span class="hljs-string">&quot;b2&quot;</span>, <span class="hljs-string">&quot;W3&quot;</span>, <span class="hljs-string">&quot;b3&quot;</span><span class="hljs-punctuation">)</span>:<br>        net[<span class="hljs-keyword">key</span>] -= alpha * grad[<span class="hljs-keyword">key</span>]<br>    return net<br>def plot_network_fit_v2<span class="hljs-punctuation">(</span>x, target, output, epoch, loss_history, ax1, ax2<span class="hljs-punctuation">)</span>:<br>    # ---- 子图 <span class="hljs-number">1</span>: 拟合过程 ----<br>    ax1.clear<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><br>    ax1.plot<span class="hljs-punctuation">(</span>x.flatten<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>, target.flatten<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>, <span class="hljs-string">&quot;ko&quot;</span>,<br>             markersize=<span class="hljs-number">5</span>, label=r<span class="hljs-string">&quot;$y = <span class="hljs-char escape_">\s</span>in(x)$&quot;</span><span class="hljs-punctuation">)</span><br>    ax1.plot<span class="hljs-punctuation">(</span>x.flatten<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>, output.flatten<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>, <span class="hljs-string">&quot;-&quot;</span>,<br>             linewidth=<span class="hljs-number">2</span>, label=<span class="hljs-string">&quot;Neural Network&quot;</span><span class="hljs-punctuation">)</span><br>    ax1.set_xlabel<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;x&quot;</span><span class="hljs-punctuation">)</span><br>    ax1.set_ylabel<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;y&quot;</span><span class="hljs-punctuation">)</span><br>    ax1.set_title<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;Epoch = &#123;epoch&#125;, MSE = &#123;loss_history[-1]:.6e&#125;&quot;</span><span class="hljs-punctuation">)</span><br>    ax1.legend<span class="hljs-punctuation">(</span><span class="hljs-keyword">loc</span>=<span class="hljs-string">&quot;best&quot;</span><span class="hljs-punctuation">)</span><br>    ax1.grid<span class="hljs-punctuation">(</span>True<span class="hljs-punctuation">)</span><br>    ax1.set_xlim<span class="hljs-punctuation">(</span><span class="hljs-number">0</span>, <span class="hljs-number">2</span> * np.pi<span class="hljs-punctuation">)</span><br>    ax1.set_ylim<span class="hljs-punctuation">(</span>-<span class="hljs-number">1</span>.<span class="hljs-number">5</span>, <span class="hljs-number">1</span>.<span class="hljs-number">5</span><span class="hljs-punctuation">)</span><br>    # ---- 子图 <span class="hljs-number">2</span>: 训练误差 ----<br>    ax2.clear<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><br>    epochs = np.arange<span class="hljs-punctuation">(</span><span class="hljs-number">1</span>, epoch + <span class="hljs-number">1</span><span class="hljs-punctuation">)</span><br>    ax2.semilogy<span class="hljs-punctuation">(</span>epochs, loss_history[:epoch], <span class="hljs-string">&quot;-&quot;</span>, linewidth=<span class="hljs-number">2</span><span class="hljs-punctuation">)</span><br>    ax2.set_xlabel<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Epoch&quot;</span><span class="hljs-punctuation">)</span><br>    ax2.set_ylabel<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Mean Square Error&quot;</span><span class="hljs-punctuation">)</span><br>    ax2.set_title<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Training Error&quot;</span><span class="hljs-punctuation">)</span><br>    ax2.grid<span class="hljs-punctuation">(</span>True<span class="hljs-punctuation">)</span><br>    ax2.set_xlim<span class="hljs-punctuation">(</span><span class="hljs-number">1</span>, max<span class="hljs-punctuation">(</span>epoch, <span class="hljs-number">2</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><br>    plt.pause<span class="hljs-punctuation">(</span><span class="hljs-number">0</span>.<span class="hljs-number">01</span><span class="hljs-punctuation">)</span>  # 对应 MATLAB pause<span class="hljs-punctuation">(</span><span class="hljs-number">0</span>.<span class="hljs-number">01</span><span class="hljs-punctuation">)</span>, 强制刷新<br>def main<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>:<br>    x, target = generate_sin_data<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><br>    print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;训练样本数 N = &#123;x.shape[1]&#125;&quot;</span><span class="hljs-punctuation">)</span><br>    net = init_network<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><br>    alpha = <span class="hljs-number">0</span>.<span class="hljs-number">05</span>        # 学习率<br>    max_epoch = <span class="hljs-number">5000</span>    # 最大训练次数<br>    loss_tol = <span class="hljs-number">1</span>e-<span class="hljs-number">5</span>     # MSE 停止阈值<br>    loss_history = []<br>    plt.ion<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>  # 开启交互模式, 对应 MATLAB 实时绘图<br>    fig, <span class="hljs-punctuation">(</span>ax1, ax2<span class="hljs-punctuation">)</span> = plt.subplots<span class="hljs-punctuation">(</span><span class="hljs-number">1</span>, <span class="hljs-number">2</span>, figsize=<span class="hljs-punctuation">(</span><span class="hljs-number">12</span>, <span class="hljs-number">4</span>.<span class="hljs-number">5</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><br>    fig.canvas.manager.set_window_title<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;BP Neural Network - sin(x) Fitting&quot;</span><span class="hljs-punctuation">)</span><br>    for epoch <span class="hljs-type">in</span> range<span class="hljs-punctuation">(</span><span class="hljs-number">1</span>, max_epoch + <span class="hljs-number">1</span><span class="hljs-punctuation">)</span>:<br><br>        # ---- 前向传播 ----<br>        cache = forward_network<span class="hljs-punctuation">(</span>net, x<span class="hljs-punctuation">)</span><br>        output = cache[<span class="hljs-string">&quot;a3&quot;</span>]<br><br>        # ---- 计算当前损失 ----<br>        error = target - output<br>        loss = np.mean<span class="hljs-punctuation">(</span>error ** <span class="hljs-number">2</span><span class="hljs-punctuation">)</span><br><br>        # ---- BP 反向传播 ----<br>        grad = bp_backward<span class="hljs-punctuation">(</span>net, cache, target<span class="hljs-punctuation">)</span><br><br>        # ---- 梯度下降更新参数 ----<br>        net = update_network<span class="hljs-punctuation">(</span>net, grad, alpha<span class="hljs-punctuation">)</span><br><br>        # ---- 计算更新参数之后的网络输出 ----<br>        cache_new = forward_network<span class="hljs-punctuation">(</span>net, x<span class="hljs-punctuation">)</span><br>        output_new = cache_new[<span class="hljs-string">&quot;a3&quot;</span>]<br><br>        # ---- 计算更新之后的 MSE ----<br>        error_new = target - output_new<br>        loss_new = np.mean<span class="hljs-punctuation">(</span>error_new ** <span class="hljs-number">2</span><span class="hljs-punctuation">)</span><br><br>        # ---- 保存当前训练误差 ----<br>        loss_history.append<span class="hljs-punctuation">(</span>loss_new<span class="hljs-punctuation">)</span><br><br>        # ---- 动态绘图 <span class="hljs-punctuation">(</span>每 <span class="hljs-number">10</span> 轮刷新一次, 加快训练速度<span class="hljs-comment">; 若要完全对应</span><br>        #      MATLAB 逐帧动画, 把下面的 if 去掉即可<span class="hljs-punctuation">)</span> ----<br>        if epoch % <span class="hljs-number">10</span> == <span class="hljs-number">0</span> or epoch == <span class="hljs-number">1</span> or loss_new &lt; loss_tol:<br>            plot_network_fit_v2<span class="hljs-punctuation">(</span>x, target, output_new,<br>                                epoch, loss_history, ax1, ax2<span class="hljs-punctuation">)</span><br>        # ---- 判断是否满足停止条件 ----<br>        if loss_new &lt; loss_tol:<br>            print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;训练完成: Epoch = &#123;epoch&#125;, MSE = &#123;loss_new:.8e&#125;&quot;</span><span class="hljs-punctuation">)</span><br>            break<br>    print<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><br>    print<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;最终训练结果&quot;</span><span class="hljs-punctuation">)</span><br>    print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;Epoch = &#123;epoch&#125;&quot;</span><span class="hljs-punctuation">)</span><br>    print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;MSE   = &#123;loss_history[-1]:.8e&#125;&quot;</span><span class="hljs-punctuation">)</span><br>    plt.ioff<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><br>    plot_network_fit_v2<span class="hljs-punctuation">(</span>x, target, output_new, epoch, loss_history, ax1, ax2<span class="hljs-punctuation">)</span><br>    plt.show<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><br>if __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    main<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><br><br><br></code></pre></td></tr></table></figure>
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Python/" class="print-no-link">#Python</a>
+      
+        <a href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" class="print-no-link">#神经网络</a>
+      
+        <a href="/tags/%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD/" class="print-no-link">#反向传播</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>反向传播算法(BP)原理与Python实现</div>
+      <div>http://example.com/2026/10/17/反向传播算法/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>LiuHongyan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年10月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/10/04/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BE%8B%E5%AD%90/" title="python面向对象例子">
+                        <span class="hidden-mobile">python面向对象例子</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <span>LiuHongyan | 技术学习笔记</span> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
