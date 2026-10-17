@@ -4,25 +4,6 @@
   
   
   <entry>
-    <title>神经网络，利用反向传播算法拟合曲线</title>
-    <link href="/2026/10/09/sin%E5%87%BD%E6%95%B0%E6%9B%B2%E7%BA%BF%E6%8B%9F%E5%90%88%EF%BC%88%E4%B8%89%E7%BA%A7%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%89/"/>
-    <url>/2026/10/09/sin%E5%87%BD%E6%95%B0%E6%9B%B2%E7%BA%BF%E6%8B%9F%E5%90%88%EF%BC%88%E4%B8%89%E7%BA%A7%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%89/</url>
-    
-    <content type="html"><![CDATA[<p>#知识储备</p><p>##MATLAB知识储备</p><p>###1.<code>rng</code> &#x3D; random number generator，随机数生成器，用来<strong>固定随机种子</strong>。<br>rng(1):每次运行代码，产生的随机序列完全一模一样。</p><ol start="2"><li></li></ol><p>#代码示例</p><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs dns"><br>class Person:<br>    def __init__<span class="hljs-punctuation">(</span>self, start_happy<span class="hljs-punctuation">)</span>:<br>        self.happy = start_happy<br>    def feed_dog<span class="hljs-punctuation">(</span>self, some_dog<span class="hljs-punctuation">)</span>:<br>        some_dog.hunger -= <span class="hljs-number">20</span> 公国转具之后看<br>        if some_dog.hunger &lt; <span class="hljs-number">0</span>:<br>            some_dog.hunger = <span class="hljs-number">0</span><br>        print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;狗饥饿度：&#123;some_dog.hunger&#125;&quot;</span><span class="hljs-punctuation">)</span><br>class Dog:<br>    def __init__<span class="hljs-punctuation">(</span>self, start_hunger<span class="hljs-punctuation">)</span>:<br>        self.hunger = start_hunger<br>    def play_with_person<span class="hljs-punctuation">(</span>self, some_person<span class="hljs-punctuation">)</span>:<br>        some_person.happy += <span class="hljs-number">15</span><br>        if some_person.happy &gt; <span class="hljs-number">100</span>:<br>            some_person.happy = <span class="hljs-number">100</span><br>        print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;人开心值：&#123;some_person.happy&#125;&quot;</span><span class="hljs-punctuation">)</span><br>person1 = Person<span class="hljs-punctuation">(</span><span class="hljs-number">40</span><span class="hljs-punctuation">)</span><br>dog1 = Dog<span class="hljs-punctuation">(</span><span class="hljs-number">70</span><span class="hljs-punctuation">)</span><br><br>print<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;==初始状态==&quot;</span><span class="hljs-punctuation">)</span><br>print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;人的开心值 = &#123;person1.happy&#125;&quot;</span><span class="hljs-punctuation">)</span><br>print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;狗的饥饿度 = &#123;dog1.hunger&#125;&quot;</span><span class="hljs-punctuation">)</span><br>person1.feed_dog<span class="hljs-punctuation">(</span>dog1<span class="hljs-punctuation">)</span><br>dog1.play_with_person<span class="hljs-punctuation">(</span>person1<span class="hljs-punctuation">)</span><br><br>print<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;==交互结束状态==&quot;</span><span class="hljs-punctuation">)</span><br>print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;人的开心值 = &#123;person1.happy&#125;&quot;</span><span class="hljs-punctuation">)</span><br>print<span class="hljs-punctuation">(</span>f<span class="hljs-string">&quot;狗的饥饿度 = &#123;dog1.hunger&#125;&quot;</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure><p>#运行图片<img src="/img/img3.png" alt="alt text"></p>]]></content>
-    
-    
-    <categories>
-      
-      <category>学习日记</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>python面向对象例子</title>
     <link href="/2026/10/04/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BE%8B%E5%AD%90/"/>
     <url>/2026/10/04/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BE%8B%E5%AD%90/</url>
