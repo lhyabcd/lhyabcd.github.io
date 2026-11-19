@@ -19,23 +19,23 @@
   <meta name="author" content="LiuHongyan">
   <meta name="keywords" content="200305">
   
-    <meta name="description" content="Hello Hexo + Fluid 这是我的第一篇技术博客。">
+    <meta name="description" content="ROS2节点与项目创建笔记  ROS2工程项目创建与运行  一、步骤   在&#x3D;&#x3D;根目录&#x3D;&#x3D;创建 .&#x2F;src 执行上述操作后，文档目录如下  121118&#x2F;└── src&#x2F;   在路径 .&#x2F;src&#x2F; 下打开 cmd   在 cmd 中（确保路径是 .&#x2F;src&#x2F;）创建功能包  1ros2 pkg create --build-type ament_cmake demo_cpp --dependenci">
 <meta property="og:type" content="article">
-<meta property="og:title" content="第一篇博客">
-<meta property="og:url" content="http://example.com/2026/09/30/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/index.html">
+<meta property="og:title" content="ROS2节点与项目创建笔记">
+<meta property="og:url" content="http://example.com/2026/11/20/ROS2/ROS2%E8%8A%82%E7%82%B9%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="我的技术博客">
-<meta property="og:description" content="Hello Hexo + Fluid 这是我的第一篇技术博客。">
+<meta property="og:description" content="ROS2节点与项目创建笔记  ROS2工程项目创建与运行  一、步骤   在&#x3D;&#x3D;根目录&#x3D;&#x3D;创建 .&#x2F;src 执行上述操作后，文档目录如下  121118&#x2F;└── src&#x2F;   在路径 .&#x2F;src&#x2F; 下打开 cmd   在 cmd 中（确保路径是 .&#x2F;src&#x2F;）创建功能包  1ros2 pkg create --build-type ament_cmake demo_cpp --dependenci">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-09-30T07:00:00.000Z">
-<meta property="article:modified_time" content="2026-10-17T14:46:27.121Z">
+<meta property="article:published_time" content="2026-11-20T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-19T13:43:47.207Z">
 <meta property="article:author" content="LiuHongyan">
-<meta property="article:tag" content="Fluid">
-<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="ROS2">
+<meta property="article:tag" content="项目创建">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>第一篇博客 - 我的技术博客</title>
+  <title>ROS2节点与项目创建笔记 - 我的技术博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -167,6 +167,86 @@
           
           
             <li class="nav-item">
+              <a class="nav-link" href="/categories/ROS2/" target="_self">
+                <i class="iconfont icon-cube-fill"></i>
+                <span>ROS2</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-code-fill"></i>
+                <span>编程语言</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/cpp/" target="_self">
+                    <i class="iconfont icon-right-fill"></i>
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/Python/" target="_self">
+                    <i class="iconfont icon-right-fill"></i>
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/Linux/" target="_self">
+                <i class="iconfont icon-terminal-fill"></i>
+                <span>Linux</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/%E7%AE%97%E6%B3%95/" target="_self">
+                <i class="iconfont icon-cube-fill"></i>
+                <span>算法</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/%E5%B7%A5%E5%85%B7/" target="_self">
+                <i class="iconfont icon-cube-fill"></i>
+                <span>工具</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
               <a class="nav-link" href="/about/" target="_self">
                 <i class="iconfont icon-user-fill"></i>
                 <span>关于</span>
@@ -261,6 +341,98 @@
           
           
             <div class="col-4 mobile-grid-cell">
+              <a href="/categories/ROS2/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-cube-fill"></i>
+                  <span>ROS2</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            
+            <div class="col-12 mobile-grid-group-header">
+              <i class="iconfont icon-code-fill"></i>
+              <span>编程语言</span>
+            </div>
+            
+              
+              
+              
+              <div class="col-4 mobile-grid-cell">
+                <a href="/categories/cpp/" target="_self">
+                  <div class="mobile-grid-item">
+                    <i class="iconfont icon-right-fill"></i>
+                    <span>C++</span>
+                  </div>
+                </a>
+              </div>
+            
+              
+              
+              
+              <div class="col-4 mobile-grid-cell">
+                <a href="/categories/Python/" target="_self">
+                  <div class="mobile-grid-item">
+                    <i class="iconfont icon-right-fill"></i>
+                    <span>Python</span>
+                  </div>
+                </a>
+              </div>
+            
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/Linux/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-terminal-fill"></i>
+                  <span>Linux</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/%E7%AE%97%E6%B3%95/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-cube-fill"></i>
+                  <span>算法</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/%E5%B7%A5%E5%85%B7/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-cube-fill"></i>
+                  <span>工具</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
               <a href="/about/" target="_self">
                 <div class="mobile-grid-item">
                   <i class="iconfont icon-user-fill"></i>
@@ -306,7 +478,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="第一篇博客"></span>
+            <span id="subtitle" data-typed-text="ROS2节点与项目创建笔记"></span>
           
         </div>
 
@@ -317,8 +489,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-09-30 15:00" pubdate>
-          2026年9月30日 下午
+        <time datetime="2026-11-20 10:00" pubdate>
+          2026年11月20日 上午
         </time>
       </span>
     
@@ -329,7 +501,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          137 字
+          1.4k 字
         
       </span>
     
@@ -340,7 +512,7 @@
         
         
         
-          2 分钟
+          12 分钟
         
       </span>
     
@@ -379,21 +551,60 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">第一篇博客</h1>
+            <h1 id="seo-header">ROS2节点与项目创建笔记</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="hello-hexo-+-fluid">Hello Hexo + Fluid</h1>
-<p>这是我的第一篇技术博客。</p>
-<span id="more"></span>
-<h2 id="测试二级标题">测试二级标题</h2>
+                <h1 id="ros2节点与项目创建笔记">ROS2节点与项目创建笔记</h1>
+<hr>
+<h2 id="ROS2工程项目创建与运行">ROS2工程项目创建与运行</h2>
+<hr>
+<h3 id="一、步骤">一、步骤</h3>
+<ol>
+<li>
+<p>在==根目录==创建 ./src<br>
+执行上述操作后，文档目录如下</p>
+ <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-number">1118</span>/<br>└── <span class="hljs-attribute">src</span>/<br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p>在路径 ./src/ 下打开 cmd</p>
+</li>
+<li>
+<p>在 cmd 中（确保路径是 ./src/）创建功能包</p>
+ <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp">ros2 pkg create --build-type ament_cmake demo_cpp --dependencies rclcpp --license Apache<span class="hljs-number">-2.0</span><br></code></pre></td></tr></table></figure>
+<p>解释：</p>
 <ul>
-<li>列表项目1</li>
-<li>列表项目2</li>
+<li>指定编译类型 <code>--build-type ament_cmake</code></li>
+<li>指定依赖库   <code>--dependencies rclcpp</code></li>
+<li>指定开源协议 <code>--license Apache-2.0</code></li>
 </ul>
-<h3 id="C语言代码示例">C语言代码示例</h3>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Hello Blog&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>执行上述操作后，文档目录如下</p>
+ <figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs nix"><span class="hljs-number">1118</span><span class="hljs-symbol">/</span><br>└── src<span class="hljs-symbol">/</span><br>    └── demo_cpp<span class="hljs-symbol">/</span><br>        ├── include<span class="hljs-symbol">/</span><br>        ├── src<span class="hljs-symbol">/</span>                    【下一步要在这里执行！】<br>        ├── CMakeLists.txt<br>        ├── LICENSE<br>        └── package.xml<br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p>在 <code>./src/demo_cpp/src/</code> 中创建文件 <code>cpp_node.cpp</code>，文档第一行会报错，【这时候该XXX】然后文档结构如下</p>
+ <figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs nix"><span class="hljs-number">1118</span><span class="hljs-symbol">/</span><br>├── .vscode<span class="hljs-symbol">/</span><br>│   └── c_cpp_properties.json       【<span class="hljs-number">2</span>. 这个怎么生成的？要在这里面改设置，cpp文件就不会报错了】<br>└── src<span class="hljs-symbol">/</span><br>    └── demo_cpp<span class="hljs-symbol">/</span><br>        ├── include<span class="hljs-symbol">/</span><br>        ├── src<span class="hljs-symbol">/</span>            <br>        │   └── cpp_node.cpp        【<span class="hljs-number">1</span>. 这一步在这里建cpp！】<br>        ├── CMakeLists.txt          【<span class="hljs-number">3</span>. 下一步编辑这个！】<br>        ├── LICENSE<br>        └── package.xml<br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p>修改 <code>./src/demo_cpp/CMakeLists.txt</code></p>
+ <figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs txt">// 1. 将C++源文件编译为可执行节点程序<br>add_executable(cpp_node src/cpp_node.cpp)  <br>// 2. 为编译目标关联ROS2依赖，自动引入头文件与库文件<br>ament_target_dependencies(cpp_node rclcpp)<br>// 3. 将可执行文件安装到功能包lib目录，供ros2 run调用<br>install(<br>    TARGETS cpp_node <br>    DESTINATION lib/$&#123;PROJECT_NAME&#125;<br>)<br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p>退回到根目录 1118/，命令行执行</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">colcon build<br></code></pre></td></tr></table></figure>
+<p>构建后文档结构如图</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs bash">1118/<br>├── .vscode/<br>│   ├── c_cpp_properties.json<br>│   └── settings.json                【build生成的】<br>├── build/                           【build生成的】<br>├── install/                         【build生成的】<br>│   └── demo_cpp/<br>│       ├── lib/<br>│       │   └── demo_cpp/<br>│       │       └── cpp_node         【这个是可执行文件，需要添加到环境变量】<br>│       └── share/<br>├── <span class="hljs-built_in">log</span>/                            【build生成的】<br>└── src/<br>    └── demo_cpp/<br>        ├── include/<br>        ├── src/<br>        │   └── cpp_node.cpp          【之前写的源代码】<br>        ├── CMakeLists.txt<br>        └── LICENSE<br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p>在 1118 路径执行以下指令将上面的可执行文件 cpp_node 添加环境变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">source</span> install/setup.bash<br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p>执行程序</p>
+ <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">ros2 <span class="hljs-built_in">run</span> demo_cpp cpp_node<br></code></pre></td></tr></table></figure>
+</li>
+</ol>
 
                 
               </div>
@@ -412,7 +623,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  <a href="/categories/ROS2/" class="category-chain-item">ROS2</a>
   
   
 
@@ -427,9 +638,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Hexo/" class="print-no-link">#Hexo</a>
+        <a href="/tags/ROS2/" class="print-no-link">#ROS2</a>
       
-        <a href="/tags/Fluid/" class="print-no-link">#Fluid</a>
+        <a href="/tags/%E9%A1%B9%E7%9B%AE%E5%88%9B%E5%BB%BA/" class="print-no-link">#项目创建</a>
       
     </div>
   
@@ -441,8 +652,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>第一篇博客</div>
-      <div>http://example.com/2026/09/30/第一篇博客/</div>
+      <div>ROS2节点与项目创建笔记</div>
+      <div>http://example.com/2026/11/20/ROS2/ROS2节点笔记/</div>
     </div>
     <div class="license-meta">
       
@@ -454,7 +665,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2026年9月30日</div>
+          <div>2026年11月20日</div>
         </div>
       
       
@@ -486,15 +697,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/09/30/%E6%97%A5%E8%AE%B0/" title="conda学习记录">
+                      <a href="/2026/11/20/CPP/%E7%B1%BB%E6%A8%A1%E6%9D%BF/" title="C++ 类模板">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">conda学习记录</span>
+                        <span class="hidden-mobile">C++ 类模板</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2026/10/17/%E7%AE%97%E6%B3%95/%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95/" title="反向传播算法(BP)原理与Python实现">
+                        <span class="hidden-mobile">反向传播算法(BP)原理与Python实现</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

@@ -1,0 +1,1053 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="LiuHongyan">
+  <meta name="keywords" content="200305">
+  
+    <meta name="description" content="类模板  一、类模板基本语法  语法如下： template&lt;typename T&gt; 类模板创建例子：12345678910111213141516171819&#x2F;&#x2F;&#x3D;int代表默认类型 template&lt;class NameType ,class AgeType&#x3D;int&gt; &#x2F;&#x2F;创建Cpp类 class person &#123; public:     person(Nam">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 类模板">
+<meta property="og:url" content="http://example.com/2026/11/20/CPP/%E7%B1%BB%E6%A8%A1%E6%9D%BF/index.html">
+<meta property="og:site_name" content="我的技术博客">
+<meta property="og:description" content="类模板  一、类模板基本语法  语法如下： template&lt;typename T&gt; 类模板创建例子：12345678910111213141516171819&#x2F;&#x2F;&#x3D;int代表默认类型 template&lt;class NameType ,class AgeType&#x3D;int&gt; &#x2F;&#x2F;创建Cpp类 class person &#123; public:     person(Nam">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-20T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-19T13:26:26.409Z">
+<meta property="article:author" content="LiuHongyan">
+<meta property="article:tag" content="类模板">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>C++ 类模板 - 我的技术博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>LiuHongyan的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/ROS2/" target="_self">
+                <i class="iconfont icon-cube-fill"></i>
+                <span>ROS2</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-code-fill"></i>
+                <span>编程语言</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/cpp/" target="_self">
+                    <i class="iconfont icon-right-fill"></i>
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/Python/" target="_self">
+                    <i class="iconfont icon-right-fill"></i>
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/Linux/" target="_self">
+                <i class="iconfont icon-terminal-fill"></i>
+                <span>Linux</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/%E7%AE%97%E6%B3%95/" target="_self">
+                <i class="iconfont icon-cube-fill"></i>
+                <span>算法</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/%E5%B7%A5%E5%85%B7/" target="_self">
+                <i class="iconfont icon-cube-fill"></i>
+                <span>工具</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/ROS2/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-cube-fill"></i>
+                  <span>ROS2</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            
+            <div class="col-12 mobile-grid-group-header">
+              <i class="iconfont icon-code-fill"></i>
+              <span>编程语言</span>
+            </div>
+            
+              
+              
+              
+              <div class="col-4 mobile-grid-cell">
+                <a href="/categories/cpp/" target="_self">
+                  <div class="mobile-grid-item">
+                    <i class="iconfont icon-right-fill"></i>
+                    <span>C++</span>
+                  </div>
+                </a>
+              </div>
+            
+              
+              
+              
+              <div class="col-4 mobile-grid-cell">
+                <a href="/categories/Python/" target="_self">
+                  <div class="mobile-grid-item">
+                    <i class="iconfont icon-right-fill"></i>
+                    <span>Python</span>
+                  </div>
+                </a>
+              </div>
+            
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/Linux/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-terminal-fill"></i>
+                  <span>Linux</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/%E7%AE%97%E6%B3%95/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-cube-fill"></i>
+                  <span>算法</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/%E5%B7%A5%E5%85%B7/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-cube-fill"></i>
+                  <span>工具</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="C++ 类模板"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-11-20 10:00" pubdate>
+          2026年11月20日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">C++ 类模板</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="类模板">类模板</h1>
+<hr>
+<h2 id="一、类模板基本语法">一、类模板基本语法</h2>
+<ol>
+<li>语法如下：<br>
+<code>template&lt;typename T&gt;</code></li>
+<li>类模板创建例子：<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">//=int代表默认类型</span><br> template&lt;<span class="hljs-keyword">class</span> <span class="hljs-title class_">NameType</span> ,<span class="hljs-type">class</span> <span class="hljs-title">AgeType</span>=<span class="hljs-title">int</span>&gt;<br> <span class="hljs-comment">//创建Cpp类</span><br> <span class="hljs-keyword">class</span> <span class="hljs-title class_">person</span><br> &#123;<br> <span class="hljs-keyword">public</span>:<br>     person(NameType name, AgeType age)<br>     &#123;<br>         <span class="hljs-keyword">this</span>-&gt;m_name = name;<br>         <span class="hljs-keyword">this</span>-&gt;m_age = age;<br>     &#125;<br>     <span class="hljs-comment">//使用模板的类型来创建变量</span><br>     NameType m_name;<br>     AgeType m_age;<br>     void showperson()<br>     &#123;<br>         cout &lt;&lt; <span class="hljs-keyword">this</span>-&gt;m_name &lt;&lt; <span class="hljs-keyword">this</span>-&gt;m_age &lt;&lt; endl;<br>     &#125;<br> &#125;;<br></code></pre></td></tr></table></figure>
+</li>
+<li>创建模板类的对象实例（两种方法）：<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs csharp">  <span class="hljs-comment">//类模板在创建对象的时候必须要指定类型</span><br>  <span class="hljs-function">person&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">int</span>&gt; <span class="hljs-title">p1</span>(<span class="hljs-params"><span class="hljs-string">&quot;lhy&quot;</span>, <span class="hljs-number">23</span></span>)</span>;<br>person&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">int</span>&gt; p1=person&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">int</span>&gt;(<span class="hljs-string">&quot;lhy&quot;</span>, <span class="hljs-number">23</span>);<br></code></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="二、类模板与函数模板区别">二、类模板与函数模板区别</h2>
+<ol>
+<li>类模板没有==自动类型推导==的使用方式，只能用显示指定类型方式，例子：<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs dns">//person p<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;ss&quot;</span>, <span class="hljs-number">1000</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;错误写法，因为不能自动推导参数类型</span><br>//正确写法<br>person&lt;string,int&gt; p<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;ss&quot;</span>, <span class="hljs-number">1000</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>//把初始化的信息打印出来<br>p.showperson<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li>类模板在模板参数列表中==可以有默认参数==，如上面创建的类里面，class AgeType=int给了默认参数类型为int，加了默认类型后创建对象的时候可以按照下面的方式创建： <figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs dns">//加了默认类型后可以这样写,这种在类模板里面可以用，函数模板里面不能用<br>person&lt;string&gt; p<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;ss&quot;</span>, <span class="hljs-number">1000</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>p.showperson<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li>类模板中成员函数的创建时机：普通类的成员函数==一开始就创建==了，类模板中的成员函数在==调用的时候才创建==</li>
+</ol>
+<h2 id="三、类模板对象做函数参数">三、类模板对象做函数参数</h2>
+<ol>
+<li>以下面的类模板为例子来讲类模板对象做函数参数<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs dart">template&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T1</span>, <span class="hljs-title">class</span> <span class="hljs-title">T2</span>&gt;//类模板</span><br><span class="hljs-class"> <span class="hljs-title">class</span> <span class="hljs-title">person</span></span><br><span class="hljs-class"> </span>&#123;<br> public:<br>     <span class="hljs-title function_">person</span>(<span class="hljs-title class_">T1</span> name,<span class="hljs-title class_">T2</span> age)<br>     &#123;<br>         <span class="hljs-keyword">this</span>-&gt;m_name = name;<br>         <span class="hljs-keyword">this</span>-&gt;m_age = age;<br>     &#125;<br>     <span class="hljs-keyword">void</span> <span class="hljs-title function_">showperson</span>()<br>     &#123;<br>         cout &lt;&lt; <span class="hljs-keyword">this</span>-&gt;m_name &lt;&lt; <span class="hljs-keyword">this</span>-&gt;m_age &lt;&lt; endl;<br>     &#125;<br>     <span class="hljs-title class_">T1</span> m_name;<br>     <span class="hljs-title class_">T2</span> m_age;<br> &#125;;<br> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test1</span>()<br> &#123;<br>     person&lt;string, <span class="hljs-built_in">int</span>&gt;<span class="hljs-title function_">p1</span>(<span class="hljs-string">&quot;孙悟空&quot;</span>, <span class="hljs-number">100</span>);<br>     <span class="hljs-title function_">printperson</span>(p1);<br> &#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li>==指定参数类型==，然后在test1里面调用：<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">//person&lt;string, int&gt;这里和test1里面的创建对象的时候给的类型一样</span><br> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printperson</span>(<span class="hljs-params">person&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">int</span>&gt;&amp; p</span>)</span><br> &#123;<br>     p.showperson();<br> &#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li>==参数模板化==，然后在test1里面调用<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-comment">//必须加这个不然下面的函数不认识T1,T2</span><br> template&lt;<span class="hljs-keyword">class</span> <span class="hljs-symbol">T1, <span class="hljs-symbol">class</span></span> <span class="hljs-symbol">T2</span>&gt;<br> <span class="hljs-symbol">void</span> <span class="hljs-symbol">printperson2</span>(<span class="hljs-symbol">person</span>&lt;<span class="hljs-symbol">T1,<span class="hljs-symbol">T2</span></span>&gt; &amp; <span class="hljs-symbol">p</span>)<br> &#123;<br>     p.showperson();<br> &#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li>==整个类模板化==,然后在test1里面调用<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-comment">//这个相当于模板函数了</span><br> template&lt;<span class="hljs-keyword">class</span> <span class="hljs-symbol">T</span>&gt;<br> <span class="hljs-symbol">void</span> <span class="hljs-symbol">printperson3</span>(<span class="hljs-symbol">T</span> &amp;<span class="hljs-symbol">p</span>)<br> &#123;<br>     p.showperson();<br> &#125;<br></code></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="四、类模板与继承">四、类模板与继承</h2>
+<ol>
+<li>以下面创建的这个类模板为例子<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs perl">template&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-class"> <span class="hljs-title">class</span> <span class="hljs-title">base</span></span><br><span class="hljs-class"> </span>&#123;<br>     T m;<br> &#125;;<br></code></pre></td></tr></table></figure>
+</li>
+<li>创建一个类，==继承base==<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-comment">//class son :public base//错误，必须要知道父类中的T的数据类型，才能继承给子类</span><br><span class="hljs-keyword">class</span> <span class="hljs-symbol">son</span> :<span class="hljs-symbol">public</span> <span class="hljs-symbol">base</span>&lt;<span class="hljs-symbol">int</span>&gt;//正确，已经指定<span class="hljs-symbol">T</span>为<span class="hljs-symbol">int</span><br>&#123;<br>&#125;;<br></code></pre></td></tr></table></figure>
+</li>
+<li>如果想==灵活指定==父类里面的T类型，那么子类也需要变成==类模板==,例子：<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">template&lt;<span class="hljs-keyword">class</span> <span class="hljs-symbol">T1,<span class="hljs-symbol">class</span></span> <span class="hljs-symbol">T2</span>&gt;<br><span class="hljs-symbol">class</span> <span class="hljs-symbol">son2</span> :<span class="hljs-symbol">public</span> <span class="hljs-symbol">base</span>&lt;<span class="hljs-symbol">T2</span>&gt;<br>&#123;<br>    T1 S;<br>&#125;;<br></code></pre></td></tr></table></figure>
+</li>
+<li>创建son,son2类对象的时候，方法：<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs perl">  //因为son这个类创建的时候已经指定了父类的类型为<span class="hljs-keyword">int</span>，<br>  //所有这里创建的时候不用在指定<br>   son s;<br>   <span class="hljs-regexp">//</span>这里son2需要指定两个数据类型，和 template&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T1</span>,<span class="hljs-title">class</span> <span class="hljs-title">T2</span>&gt;对应，</span><br><span class="hljs-class">   //如果这里加上默认数据类型，则可以在创建的时候少加数据类型</span><br><span class="hljs-class"><span class="hljs-title">son2</span>&lt;<span class="hljs-title">string</span>,<span class="hljs-title">int</span>&gt; <span class="hljs-title">s2</span></span>;<br></code></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="五类模板成员函数类外实现">五类模板成员函数类外实现</h2>
+<ol>
+<li>以下面这个类模板为例：<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">template&lt;<span class="hljs-keyword">class</span> <span class="hljs-symbol">T1, <span class="hljs-symbol">class</span></span> <span class="hljs-symbol">T2</span>&gt;<br><span class="hljs-symbol">class</span> <span class="hljs-symbol">person11</span><br>&#123;<br><span class="hljs-keyword">public</span>:<br>    person11(T1 name, T2 age);<br>    <span class="hljs-built_in">void</span> showperson();<br>    T1 m_name;<br>    T2 m_age;<br>&#125;;<br></code></pre></td></tr></table></figure>
+</li>
+<li>构造函数==类外实现==：<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-comment">//下面这个必须加，因为是模板类</span><br>template&lt;<span class="hljs-keyword">class</span> <span class="hljs-symbol">T1, <span class="hljs-symbol">class</span></span> <span class="hljs-symbol">T2</span>&gt;<br>//和普通类的构造函数类外实现区分开，普通类的成员函数::前面没有&lt;<span class="hljs-symbol">T1,<span class="hljs-symbol">T2</span></span>&gt;<br> <span class="hljs-symbol">person11</span>&lt;<span class="hljs-symbol">T1,<span class="hljs-symbol">T2</span></span>&gt;::<span class="hljs-symbol">person11</span>(<span class="hljs-symbol">T1</span> <span class="hljs-symbol">name, <span class="hljs-symbol">T2</span></span> <span class="hljs-symbol">age</span>)<br> &#123;<br>     <span class="hljs-keyword">this</span>-&gt;m_name = name;<br>     <span class="hljs-keyword">this</span>-&gt;m_age = age;<br> &#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li>成员函数==类外实现==：<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-comment">//下面这个必须加，因为是模板类</span><br> template&lt;<span class="hljs-keyword">class</span> <span class="hljs-symbol">T1, <span class="hljs-symbol">class</span></span> <span class="hljs-symbol">T2</span>&gt;<br> //和普通类的成员函数类外实现区分开，普通类的成员函数::前面没有&lt;<span class="hljs-symbol">T1,<span class="hljs-symbol">T2</span></span>&gt;<br> <span class="hljs-symbol">void</span> <span class="hljs-symbol">person11</span>&lt;<span class="hljs-symbol">T1, <span class="hljs-symbol">T2</span></span>&gt;::<span class="hljs-symbol">showperson</span>()<br> &#123;<br>     cout &lt;&lt; <span class="hljs-keyword">this</span>-&gt;m_name &lt;&lt; <span class="hljs-keyword">this</span>-&gt;m_age &lt;&lt; endl;<br> &#125;<br></code></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="六、类模板分文件编写">六、类模板分文件编写</h2>
+<ol>
+<li>以第五点的类模板和类外实现的函数为例子，创建一个test.h文件和test.cpp文件，把类模板的声明放到test.h里面去，把函数实现放到test.cpp里面去，这个时候main里面包含头文件（main里面执行<code>include&quot;test.h&quot;</code>）然后使用这个类会==出问题==，解决方法两个</li>
+<li>第一种解决方式，直接包含源文件（main里面执行<code>include&quot;test.cpp&quot;</code>），其实相当于把头文件和源文件都包含了进来</li>
+<li>第二中解决方式，把.h和.cpp文件写到一个文件里面，将后缀命名为.hpp，然后在main包含<code>include &quot;test.hpp&quot;</code>即可</li>
+</ol>
+<h2 id="七类模板与有元">七类模板与有元</h2>
+<ol>
+<li>例子：</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">class</span> <span class="hljs-title class_">T1</span>, <span class="hljs-keyword">class</span> <span class="hljs-title class_">T2</span>&gt;<span class="hljs-comment">//类模板</span><br><span class="hljs-comment">//让下面showperson1这个函数知道person的存在</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">person</span>;<br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">class</span> <span class="hljs-title class_">T1</span>, <span class="hljs-keyword">class</span> <span class="hljs-title class_">T2</span>&gt;<br><span class="hljs-comment">//这里相当于是全局的模板函数，所有类内声明应该要以模板函数来声明</span><br><span class="hljs-comment">//函数实现写在类的上面是因为让类里面的函数声明知道这个函数是一个模板函数</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">showperson1</span><span class="hljs-params">(person&lt;T1, T2&gt;&amp; p)</span></span><br><span class="hljs-function"></span>&#123;<br>    cout &lt;&lt; p.m_name &lt;&lt; p.m_age &lt;&lt; endl;<br>&#125;<br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">class</span> <span class="hljs-title class_">T1</span>, <span class="hljs-keyword">class</span> <span class="hljs-title class_">T2</span>&gt;<span class="hljs-comment">//类模板</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">person</span><br>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">person</span>(T1 name, T2 age)<br>    &#123;<br>        <span class="hljs-keyword">this</span>-&gt;m_name = name;<br>        <span class="hljs-keyword">this</span>-&gt;m_age = age;<br>    &#125;<br>    <span class="hljs-comment">//全局函数类内实现，这里比较特殊，如果把friend去掉，那么这个函数就变成了成员函数，加上friend就是全局函数，</span><br>    <span class="hljs-comment">//只不过是在类里面先函数体</span><br>    <span class="hljs-function"><span class="hljs-keyword">friend</span> <span class="hljs-type">void</span> <span class="hljs-title">showperson</span><span class="hljs-params">(person&lt;T1,T2&gt; &amp;p)</span></span><br><span class="hljs-function">    </span>&#123;<br>        cout &lt;&lt; p.m_name &lt;&lt; p.m_age &lt;&lt; endl;<br>    &#125;<br>    <span class="hljs-comment">//全局函数类外实现，因为是模板函数，得加空模板参数列表</span><br>    <span class="hljs-keyword">friend</span> <span class="hljs-type">void</span> showperson1&lt;&gt;(person&lt;T1, T2&gt;&amp; p);<br><span class="hljs-keyword">private</span>:<br>    T1 m_name;<br>    T2 m_age;<br>&#125;;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    person&lt;string, <span class="hljs-type">int</span>&gt;<span class="hljs-built_in">p</span>(<span class="hljs-string">&quot;shh&quot;</span>, <span class="hljs-number">39</span>);<br>    <span class="hljs-built_in">showperson1</span>(p);<br>	<span class="hljs-built_in">system</span>(<span class="hljs-string">&quot;pause&quot;</span>);<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ol start="2">
+<li>总结：建议全局函数做类内实现，用法简单，而且编译器可以直接识别</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/cpp/" class="category-chain-item">cpp</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%B1%BB%E6%A8%A1%E6%9D%BF/" class="print-no-link">#类模板</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>C++ 类模板</div>
+      <div>http://example.com/2026/11/20/CPP/类模板/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>LiuHongyan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年11月20日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/11/20/ROS2/ROS2%E8%8A%82%E7%82%B9%E7%AC%94%E8%AE%B0/" title="ROS2节点与项目创建笔记">
+                        <span class="hidden-mobile">ROS2节点与项目创建笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <span>LiuHongyan | 技术学习笔记</span> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
